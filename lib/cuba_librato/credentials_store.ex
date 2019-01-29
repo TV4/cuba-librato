@@ -7,26 +7,31 @@ defmodule CubaLibrato.CredentialsStore do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
-  def set_src(%Credentials{} = credentials) do
-    set(:src, credentials)
+  def set_src(%Credentials{} = credentials, space) do
+    set(:credentials_src, credentials)
+    set(:space_src, space)
   end
 
-  def set_dest(%Credentials{} = credentials) do
-    set(:dest, credentials)
+  def set_dest(%Credentials{} = credentials, space) do
+    set(:credentials_dest, credentials)
+    set(:space_dest, space)
   end
 
-  def src() do
-    get(:src)
+  def credentials_src() do
+    get(:credentials_src)
   end
 
-  def dest() do
-    get(:dest)
+  def credentials_dest() do
+    get(:credentials_dest)
   end
 
-  defp set(key, %Credentials{} = credentials) do
+  def space_src(), do: get(:space_src)
+  def space_dest(), do: get(:space_dest)
+
+  defp set(key, value) do
     Agent.update(
       __MODULE__,
-      &Map.put(&1, key, credentials)
+      &Map.put(&1, key, value)
     )
   end
 

@@ -35,6 +35,6 @@ defmodule CubaLibrato.HTTPClient do
   end
 
   def base_url() do
-    Application.get_env(:cuba_librato, :librato_base_url)
+    CubaLibrato.EnvFetcher.librato_base_url()
   end
 end

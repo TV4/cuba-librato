@@ -28,10 +28,3 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env()}.exs"
-
-config :cuba_librato,
-  librato_username_src: System.get_env("LIBRATO_USERNAME_SRC"),
-  librato_token_src: System.get_env("LIBRATO_TOKEN_SRC"),
-  librato_username_dest: System.get_env("LIBRATO_USERNAME_DEST"),
-  librato_token_dest: System.get_env("LIBRATO_TOKEN_DEST"),
-  librato_base_url: System.get_env("LIBRATO_BASE_URL") || "https://metrics-api.librato.com"
