@@ -8,8 +8,13 @@ defmodule CubaLibrato.MixProject do
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      preferred_cli_env: ["test.watch": :test]
+      preferred_cli_env: ["test.watch": :test],
+      escript: escript()
     ]
+  end
+
+  defp escript() do
+    [main_module: CubaLibrato.CLI]
   end
 
   # Run "mix help compile.app" to learn about applications.
