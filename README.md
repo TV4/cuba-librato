@@ -1,5 +1,53 @@
 # CubaLibrato
 
+## Usage
+
+```
+$ mix copy_space
+Generated cuba_librato app
+Welcome to CubaLibrato.
+
+Librato source username: app1@heroku.com
+Librato source token: password
+Librato source space: TV4 Search Stage
+
+Librato destination username: app2@heroku.com
+Librato destination token: hunter2
+Librato destination space: new space
+
+Download from Librato account: app1@heroku.com, space: TV4 Search Stage
+Upload to Librato accont: app2@heroku.com, space: new space
+
+Download completed
+
+122 charts to upload
+17 metrics to upload
+
+'yes' to continue: yes
+
+Upload completed
+$
+```
+
+You can also set the following environment variables:
+
+- LIBRATO_USERNAME_SRC
+- LIBRATO_TOKEN_SRC
+- LIBRATO_SPACE_SRC
+- LIBRATO_USERNAME_DEST
+- LIBRATO_TOKEN_DEST
+- LIBRATO_SPACE_DEST
+
+## Notes
+
+The destination space has to exist.
+
+Charts will be added if the destination space already has charts.
+
+Metrics will be overwritten if they already exist in the destination.
+
+Have fun in the sun 🍹
+
 ## LICENCE
 
 Copyright (c) 2019 Bonnier Broadcasting / TV4

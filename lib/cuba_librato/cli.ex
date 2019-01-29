@@ -1,132 +1,81 @@
 defmodule CubaLibrato.CLI do
-  alias CubaLibrato.{Credentials, EnvFetcher, CredentialsStore}
+  alias CubaLibrato.{Credentials, EnvFetcher}
 
-  def main(_args) do
-    CredentialsStore.start_link()
-
+  def start() do
     IO.puts("""
     Welcome to CubaLibrato.
-    Type `h` for help
     """)
 
-    check_environment_variables()
-    download()
+    %{
+      source: %{
+        credentials: source_credentials,
+        space: source_space
+      },
+      destination: %{
+        credentials: destination_credentials,
+        space: destination_space
+      }
+    } = get_config()
+
+    IO.puts("")
+
+    download(source_space, source_credentials)
+
+    IO.puts("")
 
     if confirm() do
-      upload()
+      upload(destination_space, destination_credentials)
     end
   end
 
-  def check_environment_variables() do
+  def get_config() do
     src = EnvFetcher.credentials_src()
-    username_src = src.username || receive_username("Source")
-    token_src = src.token || receive_token("Source")
-    space_src = EnvFetcher.space_src() || receive_space("Source")
-    CredentialsStore.set_src(Credentials.new(username_src, token_src), space_src)
+    username_src = src.username || ask("Librato source username")
+    token_src = src.token || ask("Librato source token")
+    space_src = EnvFetcher.space_src() || ask("Librato source space")
 
-    IO.inspect({username_src, space_src}, label: "source")
+    IO.puts("")
 
     dest = EnvFetcher.credentials_dest()
-    username_dest = dest.username || receive_username("Destination")
-    token_dest = dest.token || receive_token("Destination")
-    space_dest = EnvFetcher.space_dest() || receive_space("Destination")
-    CredentialsStore.set_dest(Credentials.new(username_dest, token_dest), space_dest)
-    IO.inspect({username_dest, space_dest}, label: "destination")
+    username_dest = dest.username || ask("Librato destination username")
+    token_dest = dest.token || ask("Librato destination token")
+    space_dest = EnvFetcher.space_dest() || ask("Librato destination space")
+
+    IO.puts("")
+    IO.puts("Download from Librato account: #{username_src}, space: #{space_src}")
+    IO.puts("Upload to Librato account: #{username_dest}, space: #{space_dest}")
+
+    %{
+      source: %{
+        credentials: Credentials.new(username_src, token_src),
+        space: space_src
+      },
+      destination: %{
+        credentials: Credentials.new(username_dest, token_dest),
+        space: space_dest
+      }
+    }
   end
 
-  def execute_command(["h" | _rest]) do
-    print_help()
-    receive_command()
-  end
-
-  # def execute_command(["set", account | _]) when account == "src" or account == "dest" do
-  #   username = receive_username()
-  #   token = receive_token()
-
-  #   credential = Credentials.new(username, token)
-
-  #   if(account == "src") do
-  #     CredentialsStore.set_src(credential)
-  #   else
-  #     CredentialsStore.set_dest(credential)
-  #   end
-
-  #   receive_command()
-  # end
-
-  def download() do
-    credentials = CredentialsStore.credentials_src()
-    space = CredentialsStore.space_src()
+  def download(space, credentials) do
     CubaLibrato.download(space, credentials)
+    IO.puts("Download completed")
   end
 
-  def upload() do
-    credentials = CredentialsStore.credentials_dest()
-    space = CredentialsStore.space_dest()
+  def upload(space, credentials) do
     CubaLibrato.upload(space, credentials)
-  end
-
-  def execute_command(command) do
-    IO.puts("No such command: #{Enum.join(command, " ")}")
-    receive_command()
-  end
-
-  def print_help() do
-    IO.puts("""
-    This tool copies all charts and metrics in a space between two
-    Librato accounts.
-
-    You'll need to set your source and destination Librato credentials.
-    You can do so by either using the commands `set src` and `set dest`
-    or by setting the following environment variables
-    `LIBRATO_USERNAME_SRC`, `LIBRATO_TOKEN_SRC`, `LIBRATO_USERNAME_DEST`,
-    `LIBRATO_TOKEN_DEST`.
-
-    Use the command `download` to download all metrics and charts for a space
-    from the source to memory.
-
-    Use the command `show charts` and `show metrics` to show the downloaded data
-
-    Use the command `upload` to upload all metrics and charts.
-    You will need to confirm with `yes` before the upload starts
-    """)
+    IO.puts("")
+    IO.puts("Upload completed")
   end
 
   defp confirm() do
-    yes =
-      IO.gets("'yes' to continue: ")
-      |> String.trim()
-
-    yes == "yes"
+    CubaLibrato.print_pre_upload_info()
+    IO.puts("")
+    ask("'yes' to continue") == "yes"
   end
 
-  defp receive_username(account) do
-    IO.gets("Librato #{account} username: ")
+  defp ask(question) do
+    IO.gets("#{question}: ")
     |> String.trim()
-  end
-
-  defp receive_token(account) do
-    IO.gets("Librato #{account} token: ")
-    |> String.trim()
-  end
-
-  defp receive_space(account) do
-    IO.gets("Librato #{account} space: ")
-    |> String.trim()
-  end
-
-  defp receive_command() do
-    IO.gets("> ")
-    |> case do
-      :eof ->
-        IO.puts("Thanks, goodbye!")
-
-      something ->
-        something
-        |> String.trim()
-        |> String.downcase()
-        |> String.split(" ")
-        |> execute_command()
-    end
   end
 end

@@ -9,8 +9,6 @@ defmodule CubaLibrato do
 
     ChartsStore.get()
     |> Uploader.upload_charts(space_id, credentials_dest)
-
-    IO.puts("Upload completed")
   end
 
   def download(space_name, %Credentials{} = credentials_src) do
@@ -21,9 +19,6 @@ defmodule CubaLibrato do
     metrics_needed = Downloader.download_metrics_needed(charts, credentials_src)
     MetricsStore.start_link()
     MetricsStore.store(metrics_needed)
-
-    print_pre_upload_info()
-    IO.puts("Download completed")
   end
 
   def print_pre_upload_info() do
