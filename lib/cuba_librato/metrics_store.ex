@@ -12,4 +12,8 @@ defmodule CubaLibrato.MetricsStore do
   def get() do
     Agent.get(__MODULE__, fn metrics -> metrics end)
   end
+
+  def size() do
+    length(get())
+  end
 end

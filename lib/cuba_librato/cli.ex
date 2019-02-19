@@ -17,18 +17,16 @@ defmodule CubaLibrato.CLI do
       }
     } = get_config()
 
-    IO.puts("")
-
     download(source_space, source_credentials)
 
-    IO.puts("")
-
-    if confirm() do
+    if confirm(destination_space, destination_credentials.username) do
       upload(destination_space, destination_credentials)
     end
   end
 
-  def get_config() do
+  defp get_config() do
+    IO.puts("")
+
     src = EnvFetcher.credentials_src()
     username_src = src.username || ask("Librato source username")
     token_src = src.token || ask("Librato source token")
@@ -40,10 +38,6 @@ defmodule CubaLibrato.CLI do
     username_dest = dest.username || ask("Librato destination username")
     token_dest = dest.token || ask("Librato destination token")
     space_dest = EnvFetcher.space_dest() || ask("Librato destination space")
-
-    IO.puts("")
-    IO.puts("Download from Librato account: #{username_src}, space: #{space_src}")
-    IO.puts("Upload to Librato account: #{username_dest}, space: #{space_dest}")
 
     %{
       source: %{
@@ -57,20 +51,34 @@ defmodule CubaLibrato.CLI do
     }
   end
 
-  def download(space, credentials) do
+  defp download(space, credentials) do
     CubaLibrato.download(space, credentials)
-    IO.puts("Download completed")
+
+    IO.puts("""
+
+    Finished downloading charts and metrics from
+    Librato account: #{credentials.username}
+    Librato space: #{space}
+    """)
   end
 
-  def upload(space, credentials) do
+  defp upload(space, credentials) do
     CubaLibrato.upload(space, credentials)
-    IO.puts("")
-    IO.puts("Upload completed")
+
+    IO.puts("""
+
+    Upload completed
+    """)
   end
 
-  defp confirm() do
-    CubaLibrato.print_pre_upload_info()
-    IO.puts("")
+  defp confirm(space_name_dest, username_dest) do
+    IO.puts("""
+
+    #{CubaLibrato.nr_of_charts()} charts and #{CubaLibrato.nr_of_metrics()} metrics will be uploaded to
+    Librato account #{username_dest}
+    Librato space: #{space_name_dest}
+    """)
+
     ask("'yes' to continue") == "yes"
   end
 

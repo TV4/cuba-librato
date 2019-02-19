@@ -21,8 +21,11 @@ defmodule CubaLibrato do
     MetricsStore.store(metrics_needed)
   end
 
-  def print_pre_upload_info() do
-    IO.puts("#{length(ChartsStore.get())} charts to upload")
-    IO.puts("#{length(MetricsStore.get())} metrics to upload")
+  def nr_of_metrics() do
+    MetricsStore.size()
+  end
+
+  def nr_of_charts() do
+    ChartsStore.size()
   end
 end

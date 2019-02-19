@@ -48,7 +48,7 @@ Metrics will be overwritten if they already exist in the destination.
 
 Have fun in the sun 🍹
 
-## LICENCE
+## LICENSE
 
 Copyright (c) 2019 Bonnier Broadcasting / TV4
 

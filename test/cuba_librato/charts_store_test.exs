@@ -52,5 +52,6 @@ defmodule CubaLibrato.ChartsStoreTest do
     ChartsStore.start_link()
     ChartsStore.store(charts)
     assert ChartsStore.get() == charts
+    assert ChartsStore.size() == 2
   end
 end

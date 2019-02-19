@@ -12,4 +12,8 @@ defmodule CubaLibrato.ChartsStore do
   def get() do
     Agent.get(__MODULE__, fn charts -> charts end)
   end
+
+  def size() do
+    length(get())
+  end
 end

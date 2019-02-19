@@ -42,5 +42,6 @@ defmodule CubaLibrato.MetricsStoreTest do
     MetricsStore.start_link()
     MetricsStore.store(metrics)
     assert MetricsStore.get() == metrics
+    assert MetricsStore.size() == 2
   end
 end
