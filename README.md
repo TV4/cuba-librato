@@ -9,13 +9,13 @@ Welcome to CubaLibrato.
 
 Librato source username: app1@heroku.com
 Librato source token: password
-Librato source space: TV4 Search Stage
+Librato source space: old space
 
 Librato destination username: app2@heroku.com
 Librato destination token: hunter2
 Librato destination space: new space
 
-Download from Librato account: app1@heroku.com, space: TV4 Search Stage
+Download from Librato account: app1@heroku.com, space: old space
 Upload to Librato accont: app2@heroku.com, space: new space
 
 Download completed
