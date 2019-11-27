@@ -24,7 +24,7 @@ defmodule CubaLibrato.MixProject do
     [
       {:httpoison, "~> 1.5"},
       {:jason, "~> 1.1"},
-      {:mix_test_watch, "~> 0.9.0", only: :test, runtime: false}
+      {:mix_test_watch, "~> 0.9", only: :test, runtime: false}
     ]
   end
 end
