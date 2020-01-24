@@ -22,7 +22,7 @@ defmodule CubaLibrato.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.5"},
+      {:httpoison, "~> 1.6"},
       {:jason, "~> 1.1"},
       {:mix_test_watch, "~> 0.9", only: :test, runtime: false}
     ]
